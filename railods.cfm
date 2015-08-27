@@ -1,9 +1,9 @@
-<cfset driverNames=ComponentListPackage("dbdriver")>
+<cfset driverNames=ComponentListPackage("assets.dbdriver")>
 
 		<cfset variables.drivers=struct()>
 		<cfloop array="#driverNames#" item="n">
 		    <cfif n NEQ "Driver" and n NEQ "IDriver">
-		        <cfset variables.drivers[n]=createObject("component","dbdriver."&n)>
+		        <cfset variables.drivers[n]=createObject("component","assets.dbdriver."&n)>
 		    </cfif>
 		</cfloop>
 		
