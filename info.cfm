@@ -12,13 +12,13 @@ cf_info decryptpass ='true'
 
 
 Written By J Harvey <jharvey@cfmaniac.com>
-Version 1.0.1
+Version 1.0.2
 
-Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
+Tested on Railo 4+, Lucee 4.5.X and Adobe ColdFusion 9-11 and 12 Alpha
 --->
 <cfparam name="attributes.cfadminpass"	default="">
 <cfparam name="attributes.decryptpass"	default="false">
-<cfparam name="attributes.TagVersion" default="1.0.1">
+<cfparam name="attributes.TagVersion" default="1.0.2">
 
 
 <cfswitch expression="#thisTag.ExecutionMode#">
@@ -26,8 +26,10 @@ Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
 <cfscript>
   local.version = #server.coldfusion.productversion#;
   local.engine = #server.coldfusion.productname#;
-  if(local.engine contains "Railo"){
-     local.engineV = server.railo.version;
+  if(local.engine contains "Railo") {
+	  local.engineV = server.railo.version;
+  } else if (local.engine contains "Lucee"){
+	  local.engineV = server.lucee.version;
   } else if (local.engine contains "Coldfusion"){
      local.engineV = local.version;
   }
@@ -85,6 +87,8 @@ Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
 		 <title>&lt;CF_INFO&gt; 
 		 <cfif(local.engine contains "Railo")>
 			 Railo #local.engineV#
+	     <cfelseif(local.engine contains "Lucee")>
+	         Lucee #local.engineV#		 
 		 <cfelseif(local.engine contains "ColdFusion")>
 			 ColdFusion #local.version#
 		 </cfif>
@@ -101,6 +105,9 @@ Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
       local.engine = #server.coldfusion.productname#;
       if(local.engine contains "Railo"){
 	      local.engineV = server.railo.version;
+	  } else if (local.engine contains "Lucee"){
+	      local.engineV = server.lucee.version;
+         
       } else if (local.engine contains "Coldfusion"){
 	      local.engineV = local.version;
       }
@@ -108,6 +115,8 @@ Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
       local.arch = #server.os.arch#;
       if(local.engine Contains "Railo") {
 	      local.servlet = #server.servlet.name#;
+	  } else if (local.engine contains "Lucee"){
+	      local.servlet = #server.servlet.name#;    
       } else if (local.engine contains "ColdFusion"){
 	      local.servlet = #server.coldfusion.appserver#;
       }
@@ -115,8 +124,10 @@ Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
       WriteOutput('<table border="0" cellpadding="3" width="600">
 			<tr class="h"><td>
 			<h1 class="p"><img border="0" src="assets/#lcase(rereplace(local.engine, " ", "_","All"))#.png" alt="#local.engine# logo">'); 
-			if(local.Engine contains "Railo"){
-				WriteOutput('Railo&trade; #local.engineV#</h1><br style="clear:both" />');
+			if(local.Engine contains "Railo") {
+				WriteOutput( 'Railo&trade; #local.engineV#</h1><br style="clear:both" />' );
+			} else if(local.Engine contains "Lucee"){
+				WriteOutput( 'Lucee&trade; #local.engineV#</h1><br style="clear:both" />' );
 			} else {
 				WriteOutput('ColdFusion #local.version#</h1><br style="clear:both" />');
 			}
@@ -162,7 +173,7 @@ Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
 			 
 	    
 	    
-	    if(local.engine contains "Railo"){
+	    if(local.engine contains "Railo" || local.engine contains "Lucee"){
 	      
 	      include "railods.cfm";
 	      for(ds=1; ds LTE datasources.recordcount; ds++){
@@ -181,10 +192,12 @@ Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
 		for(ds=1; ds LTE datasources.recordcount; ds++){
 				WriteOutput('<tr><td>#datasources.name[ds]#</td>
 				<td>#datasources.host[ds]#</td>
-				<td>#getTypeName(datasources.ClassName[ds],datasources.dsn[ds])#</td>
-				<td>#datasources.username[ds]# | #datasources.password[ds]#</td>
-				</tr>
-				');
+				<td>#getTypeName(datasources.ClassName[ds],datasources.dsn[ds])#</td><td>');
+				if(len(datasources.username[ds])) {
+					WriteOutput( '#datasources.username[ds]# | #datasources.password[ds]#' );
+				}
+				Writeoutput('</td></tr>');
+				
 			  }
 	  } else if(local.engine contains "ColdFusion") {
 		  local.decryptPass = attributes.DecryptPass;
@@ -216,7 +229,11 @@ Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
 			  WriteOutput('<tr><td>#datasources[dsn].name#</td>
 	                    <td><em>#datasources[dsn].urlmap.connectionprops.host#</em></td>
 	                    <td>#datasources[dsn].driver#<br></td>
-	                    <td>#datasources[dsn].username# || <!---#datasources[dsn].password#--->#decryptedPass#</td></tr>');
+	                    <td>');
+	                    if(len(datasources[dsn].username)){
+	                    writeOutput('#datasources[dsn].username# || <!---#datasources[dsn].password#--->#decryptedPass#');
+	                    }
+		                WriteOutput('</td></tr>');
 		  }
 	  }    	
 	  
@@ -247,7 +264,7 @@ Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
 								
 			<br />
 			');
-		    if(local.engine contains "Railo"){
+		    if(local.engine contains "Railo" || local.engine contains "Lucee"){
 			WriteOutput('<table border="0" cellpadding="3" width="600">
 			<tr><td class="e">Server Name </td><td class="v">#local.servername# </td></tr>
 			<tr><td class="e">Server Software </td><td class="v">#local.serverSW# </td></tr>
@@ -279,7 +296,7 @@ Tested on Railo 4+ and Adobe ColdFusion 9-11 and 12 Alpha
 			<br />
 			<table border="0" cellpadding="3" width="600">
 			<tr class="h"><td>
-			<h1 class="p">Railo Information</h1><br style="clear:both" /></td></tr>
+			<h1 class="p">#local.engine# Information</h1><br style="clear:both" /></td></tr>
 			</tr>
 			</table>
 			<table border="0" cellpadding="3" width="600">
