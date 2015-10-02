@@ -1,4 +1,2 @@
-<cf_info cfadminPass='sith1701'>
-
-
+<cf_info>
 

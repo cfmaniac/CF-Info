@@ -140,7 +140,7 @@ Tested on Railo 4+, Lucee 4.5.X and Adobe ColdFusion 9-11 and 12 Alpha
 			<tr><td class="e">Currently running on </td><td class="v">#local.os# #local.arch# </td></tr>
 			<tr><td class="e">ColdFusion Server Engine </td><td class="v">#local.engine# </td></tr>
 			<tr><td class="e">ColdFusion Server Engine Version</td><td class="v">#local.engineV# </td></tr>');
-			if(local.engine contains "Railo"){ 
+			if(local.engine contains "Railo" || local.engine contains "Lucee"){ 
 			WriteOutput('<tr><td class="e">ColdFusion Compatibility Version </td><td class="v">#local.version# </td></tr>');
 			}
 			WriteOutput('<tr><td class="e">ColdFusion Servlet </td><td class="v">#local.servlet# </td></tr>
@@ -150,8 +150,11 @@ Tested on Railo 4+, Lucee 4.5.X and Adobe ColdFusion 9-11 and 12 Alpha
 	  ');
   </cfscript>
 </cfsavecontent>
+
 <!---DataSources--->
+
 <cfsavecontent variable="DataSources">
+  <cfif isdefined('attributes.cfadminpass') and attributes.cfadminpass NEQ "">
   <cfscript>
         local.engine = #server.coldfusion.productname#;
 		local.cfadminPass =attributes.cfadminpass;
@@ -239,7 +242,9 @@ Tested on Railo 4+, Lucee 4.5.X and Adobe ColdFusion 9-11 and 12 Alpha
 	  
 	  	 	WriteOutput('</tbody></table><br />');	 
   </cfscript>
+  </cfif>
 </cfsavecontent>
+
 <!---Additional Server Info--->
 <cfsavecontent variable="ServerExt">
 	<cfscript>
