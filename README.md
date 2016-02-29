@@ -1,7 +1,7 @@
 # CF-Info
 A ColdFusion Version of PHPInfo() or PERL Info();
 
-CF-INFO Supports Railo 4+, Lucee 4.5.X & ColdFusion 9-11.
+CF-INFO Supports Railo 4+, Lucee 4.5.X, Lucee 5.0.0.178-BETA & ColdFusion 9-2016.
 
 # What's New V-1.0.2:
 	Converted CFINFO into ColdFusion Custom Tag
