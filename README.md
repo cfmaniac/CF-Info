@@ -16,5 +16,7 @@ CF-INFO Supports Railo 4+, Lucee 4.5.X, Lucee 5.0.0.178-BETA & ColdFusion 9-2016
 	To view Decrypted DataSource Passwords (ACF Only):
 	Add Attribute &lt;cf_info cfadminPass='' decryptPass='true'&gt;
 	
-	
+# Notes:
+To View Decrypted Datasource Passwords on ACF, you will need to know your ACF Seed;
+CF-Info should already contain the proper seeds for password decryption
 	
